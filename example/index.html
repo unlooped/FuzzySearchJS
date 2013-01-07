@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FuzzySearchJS Example</title>
+        <link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
+        <style>
+            body {
+                font-family: Arial;
+                font-size: 14px;
+                color: #000;
+                overflow: auto;
+            }
+            
+            section {
+                width: 45%;
+                float: left;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>FuzzySearchJS Example</h1>
+        <section class="data">
+            <h2>Data</h2>
+            <ul id="data"></ul>
+        </section>
+        <section class="results">
+            <h2>Results</h2>
+            <input type="text" value="i.E. tool suuplies" id="searchfield" /><p>Current maximum score: <span id="maxscore"></span></p>
+            <ul id="results"></ul>
+        </section>
+        <script src="../js/data.js"></script>
+        <script src="../js/FuzzySearchWrup.js"></script>
+    </body>
+</html>
