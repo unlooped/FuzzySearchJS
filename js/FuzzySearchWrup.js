@@ -2866,8 +2866,10 @@ list
                 this.searchSet = searchSet;
             },
             search: function(needle) {
+                var needle = string.clean(needle);
                 var result = [];
                 list.each(this.searchSet, function(value) {
+                    var value = string.clean(value);
                     var score = this.getOverallPoints(needle, value);
                     result.push({
                         score: score.score,
@@ -2880,7 +2882,6 @@ list
                 });
             },
             getOverallPoints: function(needle, haystack) {
-                var needle = string.clean(needle);
                 if (!this.options.caseSensitive) {
                     var needle = needle.toLowerCase();
                     var haystack = haystack.toLowerCase();
