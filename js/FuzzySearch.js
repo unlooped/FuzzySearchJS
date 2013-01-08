@@ -118,9 +118,7 @@ var FuzzySearch = prime({
         var haystackWords = haystack.split(' ');
         
         if (this.CONST['DISTANCE_METHOD_SIFT3'] == this.options.distanceMethod && !this.sift3) {
-            this.sift3 = new sift3(haystack);
-        } else if (this.sift3) {
-            this.sift3.setHaystack(haystack);
+            this.sift3 = new sift3();
         }
         
         var matches = [];
@@ -136,7 +134,7 @@ var FuzzySearch = prime({
                 if (this.CONST['DISTANCE_METHOD_LEVENSHTEIN'] == this.options.distanceMethod) {
                     score = lev(needleWord, haystackWord);
                 } else if (this.CONST['DISTANCE_METHOD_SIFT3'] == this.options.distanceMethod) {
-                    score = this.sift3.getDifference(needleWord);
+                    score = this.sift3.getDifference(needleWord, haystackWord);
                 }
                 
                 if (score <= this.options.maxDistanceTolerance) {

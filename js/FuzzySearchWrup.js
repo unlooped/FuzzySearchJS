@@ -34,13 +34,15 @@
         // I dunno why it's not implemented in elements. Take a deeper look later...
         var zen = require("v");
 
-        var mixin = require("w");
+        var number = require("w");
 
-        var bound = require("x");
+        var mixin = require("y");
 
-        var list = require("z");
+        var bound = require("z");
 
-        var FuzzySearch = require("10");
+        var list = require("11");
+
+        var FuzzySearch = require("12");
 
         onDomReady(function() {
             new Main();
@@ -71,7 +73,7 @@
                 empty(container).empty();
                 // WA, implement empty in elements...
                 list.each(results, function(result) {
-                    zen("li").text(result.value + " (" + result.score + ")").insert(container);
+                    zen("li").text(result.value + " (total: " + number.round(result.score) + " ds: " + number.round(result.detailedScore.distanceScore / 3) + ")").insert(container);
                 });
             },
             search: function() {
@@ -2733,6 +2735,61 @@ zen
         };
     },
     w: function(require, module, exports, global) {
+        /*
+number methods
+ - inherits from es5/number
+*/
+                "use strict";
+
+        var shell = require("6");
+
+        var number = shell({
+            inherits: require("x"),
+            /*(number.limit)?*/
+            limit: function(min, max) {
+                return Math.min(max, Math.max(min, this));
+            },
+            /*:*/
+            /*(number.round)?*/
+            round: function(precision) {
+                precision = Math.pow(10, precision || 0).toFixed(precision < 0 ? -precision : 0);
+                return Math.round(this * precision) / precision;
+            },
+            /*:*/
+            /*(number.times)?*/
+            times: function(fn, context) {
+                for (var i = 0; i < this; i++) fn.call(context, i, null, this);
+                return this;
+            },
+            /*:*/
+            /*(numer.random)?*/
+            random: function(max) {
+                return Math.floor(Math.random() * (max - this + 1) + this);
+            }
+        });
+
+        module.exports = number;
+    },
+    x: function(require, module, exports, global) {
+        /*
+number
+ - es5 number shell
+*/
+                "use strict";
+
+        var shell = require("6");
+
+        var proto = Number.prototype;
+
+        var number = shell({
+            toExponential: proto.toExponential,
+            toFixed: proto.toFixed,
+            toPrecision: proto.toPrecision
+        });
+
+        module.exports = number;
+    },
+    y: function(require, module, exports, global) {
                 "use strict";
 
         var prime = require("1");
@@ -2749,14 +2806,14 @@ zen
 
         module.exports = mixin;
     },
-    x: function(require, module, exports, global) {
+    z: function(require, module, exports, global) {
                 "use strict";
 
         // credits to @cpojer's Class.Binds, released under the MIT license
         // https://github.com/cpojer/mootools-class-extras/blob/master/Source/Class.Binds.js
         var prime = require("1");
 
-        var fn = require("y");
+        var fn = require("10");
 
         var bound = prime({
             bound: function(name) {
@@ -2767,7 +2824,7 @@ zen
 
         module.exports = bound;
     },
-    y: function(require, module, exports, global) {
+    "10": function(require, module, exports, global) {
         /*
 function methods
 */
@@ -2788,7 +2845,7 @@ function methods
 
         module.exports = fn;
     },
-    z: function(require, module, exports, global) {
+    "11": function(require, module, exports, global) {
         /*
 list
  - to be used with any object that has a length and numeric keys
@@ -2836,22 +2893,22 @@ list
 
         module.exports = list;
     },
-    "10": function(require, module, exports, global) {
+    "12": function(require, module, exports, global) {
                 "Use Strict";
 
         var prime = require("1");
 
-        var mixin = require("w");
+        var mixin = require("y");
 
-        var bound = require("x");
+        var bound = require("z");
 
-        var Options = require("11");
+        var Options = require("13");
 
-        var list = require("z");
+        var list = require("11");
 
         var string = require("9");
 
-        var number = require("14");
+        var number = require("w");
 
         var lev = require("16");
 
@@ -2949,9 +3006,7 @@ list
                 var needleWords = needle.split(" ");
                 var haystackWords = haystack.split(" ");
                 if (this.CONST["DISTANCE_METHOD_SIFT3"] == this.options.distanceMethod && !this.sift3) {
-                    this.sift3 = new sift3(haystack);
-                } else if (this.sift3) {
-                    this.sift3.setHaystack(haystack);
+                    this.sift3 = new sift3();
                 }
                 var matches = [];
                 var nwl = needleWords.length;
@@ -2964,7 +3019,7 @@ list
                         if (this.CONST["DISTANCE_METHOD_LEVENSHTEIN"] == this.options.distanceMethod) {
                             score = lev(needleWord, haystackWord);
                         } else if (this.CONST["DISTANCE_METHOD_SIFT3"] == this.options.distanceMethod) {
-                            score = this.sift3.getDifference(needleWord);
+                            score = this.sift3.getDifference(needleWord, haystackWord);
                         }
                         if (score <= this.options.maxDistanceTolerance) {
                             matches.push({
@@ -3019,12 +3074,12 @@ list
 
         module.exports = FuzzySearch;
     },
-    "11": function(require, module, exports, global) {
+    "13": function(require, module, exports, global) {
                 "use strict";
 
         var prime = require("1");
 
-        var object = require("12");
+        var object = require("14");
 
         var Options = prime({
             setOptions: function(options) {
@@ -3040,7 +3095,7 @@ list
 
         module.exports = Options;
     },
-    "12": function(require, module, exports, global) {
+    "14": function(require, module, exports, global) {
         /*
 object methods
 */
@@ -3048,7 +3103,7 @@ object methods
 
         var shell = require("6");
 
-        var type = require("13");
+        var type = require("15");
 
         var object = shell({
             merge: function(key, value) {
@@ -3064,7 +3119,7 @@ object methods
 
         module.exports = object;
     },
-    "13": function(require, module, exports, global) {
+    "15": function(require, module, exports, global) {
         /*
 type
 */
@@ -3081,61 +3136,6 @@ type
         };
 
         module.exports = type;
-    },
-    "14": function(require, module, exports, global) {
-        /*
-number methods
- - inherits from es5/number
-*/
-                "use strict";
-
-        var shell = require("6");
-
-        var number = shell({
-            inherits: require("15"),
-            /*(number.limit)?*/
-            limit: function(min, max) {
-                return Math.min(max, Math.max(min, this));
-            },
-            /*:*/
-            /*(number.round)?*/
-            round: function(precision) {
-                precision = Math.pow(10, precision || 0).toFixed(precision < 0 ? -precision : 0);
-                return Math.round(this * precision) / precision;
-            },
-            /*:*/
-            /*(number.times)?*/
-            times: function(fn, context) {
-                for (var i = 0; i < this; i++) fn.call(context, i, null, this);
-                return this;
-            },
-            /*:*/
-            /*(numer.random)?*/
-            random: function(max) {
-                return Math.floor(Math.random() * (max - this + 1) + this);
-            }
-        });
-
-        module.exports = number;
-    },
-    "15": function(require, module, exports, global) {
-        /*
-number
- - es5 number shell
-*/
-                "use strict";
-
-        var shell = require("6");
-
-        var proto = Number.prototype;
-
-        var number = shell({
-            toExponential: proto.toExponential,
-            toFixed: proto.toFixed,
-            toPrecision: proto.toPrecision
-        });
-
-        module.exports = number;
     },
     "16": function(require, module, exports, global) {
         // Generics
@@ -3207,8 +3207,8 @@ number
             constructor: function(haystack) {
                 this.haystack = haystack;
             },
-            getDifference: function(term) {
-                var s1 = term, s2 = this.haystack, c = 0, offset1 = 0, offset2 = 0, lcs = 0, maxOffset = 5, i = 0;
+            getDifference: function(s1, s2) {
+                var c = 0, offset1 = 0, offset2 = 0, lcs = 0, maxOffset = 5, i = 0;
                 if (s1 == null || s1.length === 0) {
                     if (s2 == null || s2.length === 0) {
                         return 0;
