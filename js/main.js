@@ -29,7 +29,6 @@ var Main = prime({
     
     constructor: function() {
         this.searchField = $$('#searchfield');
-        console.log(FuzzySearch.prototype);
         this.levFuzzySearch = new FuzzySearch(fsData);
         this.sift3FuzzySearch = new FuzzySearch(fsData, {'distanceMethod': FuzzySearch.CONST['DISTANCE_METHOD_SIFT3']});
         
