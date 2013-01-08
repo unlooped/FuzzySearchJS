@@ -49,8 +49,12 @@
         var Main = prime({
             constructor: function() {
                 this.searchField = $$("#searchfield");
-                this.fuzzySearch = new FuzzySearch(fsData);
-                $$("#maxscore").text(this.fuzzySearch.getMaximumScore());
+                console.log(FuzzySearch.prototype);
+                this.levFuzzySearch = new FuzzySearch(fsData);
+                this.sift3FuzzySearch = new FuzzySearch(fsData, {
+                    distanceMethod: FuzzySearch.CONST["DISTANCE_METHOD_SIFT3"]
+                });
+                $$("#maxscore").text(this.levFuzzySearch.getMaximumScore());
                 this.loadEvents();
                 this.displayData();
             },
@@ -63,8 +67,8 @@
                     zen("li").text(data).insert(container);
                 });
             },
-            displayResults: function(results) {
-                var container = $$("#results");
+            displayResults: function(results, container) {
+                var container = container;
                 empty(container).empty();
                 // WA, implement empty in elements...
                 list.each(results, function(result) {
@@ -73,8 +77,10 @@
             },
             search: function() {
                 var term = this.searchField.value();
-                var results = this.fuzzySearch.search(term);
-                this.displayResults(results);
+                var levResults = this.levFuzzySearch.search(term);
+                var sift3Results = this.sift3FuzzySearch.search(term);
+                this.displayResults(levResults, $$("#results"));
+                this.displayResults(sift3Results, $$("#siftResults"));
             }
         });
 
@@ -2848,21 +2854,25 @@ list
 
         var number = require("14");
 
-        var lev = global.lev = require("16");
+        var lev = require("16");
+
+        var sift3 = require("17");
 
         var FuzzySearch = prime({
             options: {
-                maxLevenshteinTolerance: 3,
+                maxDistanceTolerance: 3,
                 maxWordTolerance: 3,
                 minTermLength: 3,
                 maxIterations: 500,
                 caseSensitive: false,
                 wordCountFactor: 1,
                 indexOfFactor: 3,
-                levenshteinFactor: 3
+                distanceFactor: 3,
+                distanceMethod: 1
             },
             constructor: function(searchSet, options) {
                 this.setOptions(options);
+                console.log(this.options);
                 this.searchSet = searchSet;
             },
             search: function(needle) {
@@ -2892,26 +2902,26 @@ list
                         detailedScore: {
                             indexPoints: 100 * this.options.indexOfFactor,
                             wordCountPoints: 100 * this.options.wordCountFactor,
-                            levenshteinScore: 100 * this.options.levenshteinFactor
+                            distanceScore: 100 * this.options.distanceFactor
                         }
                     };
                 }
                 var indexOfMatches = this.getIndexOfMatches(needle, haystack);
                 var indexPoints = this.getIndexOfPoints(indexOfMatches, needle);
                 var wordCountPoints = this.getWordCountPoints(needle, haystack);
-                var levenshteinMatches = this.getLevenshteinMatches(needle, haystack);
-                var levenshteinScore = this.getLevenshteinScore(levenshteinMatches, haystack);
+                var distanceMatches = this.getDistanceMatches(needle, haystack);
+                var distanceScore = this.getDistanceScore(distanceMatches, haystack);
                 return {
-                    score: indexPoints * this.options.indexOfFactor + wordCountPoints * this.options.wordCountFactor + levenshteinScore * this.options.levenshteinFactor,
+                    score: indexPoints * this.options.indexOfFactor + wordCountPoints * this.options.wordCountFactor + distanceScore * this.options.distanceFactor,
                     detailedScore: {
                         indexPoints: indexPoints * this.options.indexOfFactor,
                         wordCountPoints: wordCountPoints * this.options.wordCountFactor,
-                        levenshteinScore: levenshteinScore * this.options.levenshteinFactor
+                        distanceScore: distanceScore * this.options.distanceFactor
                     }
                 };
             },
             getMaximumScore: function() {
-                return 100 * (this.options.indexOfFactor + this.options.wordCountFactor + this.options.levenshteinFactor);
+                return 100 * (this.options.indexOfFactor + this.options.wordCountFactor + this.options.distanceFactor);
             },
             getIndexOfMatches: function(needle, haystack) {
                 this.haystack = haystack;
@@ -2937,9 +2947,14 @@ list
                 });
                 return 100 / needle.length * sum;
             },
-            getLevenshteinMatches: function(needle, haystack) {
+            getDistanceMatches: function(needle, haystack) {
                 var needleWords = needle.split(" ");
                 var haystackWords = haystack.split(" ");
+                if (this.CONST["DISTANCE_METHOD_SIFT3"] == this.options.distanceMethod && !this.sift3) {
+                    this.sift3 = new sift3(haystack);
+                } else if (this.sift3) {
+                    this.sift3.setHaystack(haystack);
+                }
                 var matches = [];
                 var nwl = needleWords.length;
                 var hwl = haystackWords.length;
@@ -2947,8 +2962,15 @@ list
                     for (var j = 0; j < hwl; j++) {
                         var needleWord = needleWords[i];
                         var haystackWord = haystackWords[j];
-                        var score = lev(needleWord, haystackWord);
-                        if (score <= this.options.maxLevenshteinTolerance) {
+                        var score;
+                        if (this.CONST["DISTANCE_METHOD_LEVENSHTEIN"] == this.options.distanceMethod) {
+                            console.log("lev");
+                            score = lev(needleWord, haystackWord);
+                        } else if (this.CONST["DISTANCE_METHOD_SIFT3"] == this.options.distanceMethod) {
+                            console.log("sift3");
+                            score = this.sift3.getDifference(needleWord);
+                        }
+                        if (score <= this.options.maxDistanceTolerance) {
                             matches.push({
                                 match: needleWord,
                                 score: score
@@ -2958,15 +2980,15 @@ list
                 }
                 return matches;
             },
-            getLevenshteinScore: function(results, haystack) {
+            getDistanceScore: function(results, haystack) {
                 var haystackWords = haystack.split(" ");
                 var combinedScore = 0;
                 list.each(results, function(result) {
                     combinedScore += result.score;
                 });
-                combinedScore += (haystackWords.length - results.length) * this.options.maxLevenshteinTolerance;
+                combinedScore += (haystackWords.length - results.length) * this.options.maxDistanceTolerance;
                 var points = 50 / haystackWords.length * results.length;
-                points += 50 / (haystackWords.length * this.options.maxLevenshteinTolerance) * (haystackWords.length * this.options.maxLevenshteinTolerance - combinedScore);
+                points += 50 / (haystackWords.length * this.options.maxDistanceTolerance) * (haystackWords.length * this.options.maxDistanceTolerance - combinedScore);
                 return points;
             },
             getWordCountPoints: function(needle, haystack) {
@@ -2992,6 +3014,11 @@ list
             }
         });
 
+        FuzzySearch.CONST = FuzzySearch.prototype.CONST = {
+            DISTANCE_METHOD_LEVENSHTEIN: 1,
+            DISTANCE_METHOD_SIFT3: 2
+        };
+
         mixin(FuzzySearch, Options, bound);
 
         module.exports = FuzzySearch;
@@ -3003,12 +3030,12 @@ list
 
         var Options = prime({
             setOptions: function(options) {
+                var object = require("12");
+                this.options = object.merge({}, this.options);
                 if (!options) {
                     return;
                 }
-                this.options = this.options || {};
-                var Object = require("12");
-                this.options = Object.merge(this.options, options);
+                this.options = object.merge(this.options, options);
             }
         });
 
@@ -3170,5 +3197,55 @@ number
 
         // Export
         module.exports = Levenshtein;
+    },
+    "17": function(require, module, exports, global) {
+        // sift3 - http://siderite.blogspot.com/2007/04/super-fast-and-accurate-string-distance.HTMLElement
+                "Use Strict";
+
+        var prime = require("1");
+
+        var sift3 = prime({
+            constructor: function(haystack) {
+                this.haystack = haystack;
+            },
+            getDifference: function(term) {
+                var s1 = term, s2 = this.haystack, c = 0, offset1 = 0, offset2 = 0, lcs = 0, maxOffset = 5, i = 0;
+                if (s1 == null || s1.length === 0) {
+                    if (s2 == null || s2.length === 0) {
+                        return 0;
+                    } else {
+                        return s2.length;
+                    }
+                }
+                if (s2 == null || s2.length === 0) {
+                    return s1.length;
+                }
+                while (c + offset1 < s1.length && c + offset2 < s2.length) {
+                    if (s1.charAt(c + offset1) == s2.charAt(c + offset2)) {
+                        lcs++;
+                    } else {
+                        offset1 = 0;
+                        offset2 = 0;
+                        for (;i < maxOffset; i++) {
+                            if (c + i < s1.length && s1.charAt(c + i) == s2.charAt(c)) {
+                                offset1 = i;
+                                break;
+                            }
+                            if (c + i < s2.length && s1.charAt(c) == s2.charAt(c + i)) {
+                                offset2 = i;
+                                break;
+                            }
+                        }
+                    }
+                    c++;
+                }
+                return (s1.length + s2.length) / 2 - lcs;
+            },
+            setHaystack: function(haystack) {
+                this.haystack = haystack;
+            }
+        });
+
+        module.exports = sift3;
     }
 });

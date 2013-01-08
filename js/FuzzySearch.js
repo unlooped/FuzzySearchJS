@@ -9,24 +9,26 @@ var list = require('prime/collection/list');
 var string = require('prime/types/string');
 var number = require('prime/types/number');
 
-
-var lev = global.lev = require('levenshtein');
+var lev = require('levenshtein');
+var sift3 = require('./Sift3');
 
 var FuzzySearch = prime({
     
     options: {
-        'maxLevenshteinTolerance': 3,
+        'maxDistanceTolerance': 3,
         'maxWordTolerance': 3,
         'minTermLength': 3,
         'maxIterations': 500,
         'caseSensitive': false,
         'wordCountFactor': 1,
         'indexOfFactor': 3,
-        'levenshteinFactor': 3
+        'distanceFactor': 3,
+        'distanceMethod': 1 // this.CONST['DISTANCE_METHOD_LEVENSHTEIN']
     },
     
     constructor: function(searchSet, options) {
         this.setOptions(options);
+        console.log(this.options);
         this.searchSet = searchSet;
     },
     
@@ -56,27 +58,28 @@ var FuzzySearch = prime({
             return {'score': this.getMaximumScore(),
                     'detailedScore': {'indexPoints': 100 * this.options.indexOfFactor,
                                       'wordCountPoints': 100 * this.options.wordCountFactor,
-                                      'levenshteinScore': 100 * this.options.levenshteinFactor}};
+                                      'distanceScore': 100 * this.options.distanceFactor}};
         }
         
         var indexOfMatches = this.getIndexOfMatches(needle, haystack);
         var indexPoints = this.getIndexOfPoints(indexOfMatches, needle);
         var wordCountPoints = this.getWordCountPoints(needle, haystack);
-        var levenshteinMatches = this.getLevenshteinMatches(needle, haystack);
-        var levenshteinScore = this.getLevenshteinScore(levenshteinMatches, haystack);
+        
+        var distanceMatches = this.getDistanceMatches(needle, haystack);
+        var distanceScore = this.getDistanceScore(distanceMatches, haystack);
         
         return {'score': indexPoints * this.options.indexOfFactor
                          + wordCountPoints * this.options.wordCountFactor 
-                         + levenshteinScore * this.options.levenshteinFactor,
+                         + distanceScore * this.options.distanceFactor,
                 'detailedScore': {'indexPoints': indexPoints * this.options.indexOfFactor,
                                   'wordCountPoints': wordCountPoints * this.options.wordCountFactor, 
-                                  'levenshteinScore': levenshteinScore * this.options.levenshteinFactor
+                                  'distanceScore': distanceScore * this.options.distanceFactor
                                   }
                 };
     },
     
     getMaximumScore: function() {
-        return 100 * (this.options.indexOfFactor + this.options.wordCountFactor + this.options.levenshteinFactor);
+        return 100 * (this.options.indexOfFactor + this.options.wordCountFactor + this.options.distanceFactor);
     },
     
     getIndexOfMatches: function(needle, haystack) {
@@ -111,9 +114,15 @@ var FuzzySearch = prime({
         return 100 / needle.length * sum;
     },
     
-    getLevenshteinMatches: function(needle, haystack) {
+    getDistanceMatches: function(needle, haystack) {
         var needleWords = needle.split(' ');
         var haystackWords = haystack.split(' ');
+        
+        if (this.CONST['DISTANCE_METHOD_SIFT3'] == this.options.distanceMethod && !this.sift3) {
+            this.sift3 = new sift3(haystack);
+        } else if (this.sift3) {
+            this.sift3.setHaystack(haystack);
+        }
         
         var matches = [];
         
@@ -124,8 +133,16 @@ var FuzzySearch = prime({
                 var needleWord = needleWords[i];
                 var haystackWord = haystackWords[j];
                 
-                var score = lev(needleWord, haystackWord);
-                if (score <= this.options.maxLevenshteinTolerance) {
+                var score;
+                if (this.CONST['DISTANCE_METHOD_LEVENSHTEIN'] == this.options.distanceMethod) {
+                    console.log('lev');
+                    score = lev(needleWord, haystackWord);
+                } else if (this.CONST['DISTANCE_METHOD_SIFT3'] == this.options.distanceMethod) {
+                    console.log('sift3');
+                    score = this.sift3.getDifference(needleWord);
+                }
+                
+                if (score <= this.options.maxDistanceTolerance) {
                     matches.push({'match': needleWord, 'score': score});
                 }
             }
@@ -134,7 +151,7 @@ var FuzzySearch = prime({
         return matches;
     },
     
-    getLevenshteinScore: function(results, haystack) {
+    getDistanceScore: function(results, haystack) {
         var haystackWords = haystack.split(' ');
         
         var combinedScore = 0;
@@ -142,10 +159,10 @@ var FuzzySearch = prime({
             combinedScore += result.score;
         });
         
-        combinedScore += (haystackWords.length - results.length) * this.options.maxLevenshteinTolerance;
+        combinedScore += (haystackWords.length - results.length) * this.options.maxDistanceTolerance;
         
         var points = 50 / haystackWords.length * results.length;
-        points += 50 / (haystackWords.length * this.options.maxLevenshteinTolerance) * (haystackWords.length * this.options.maxLevenshteinTolerance - combinedScore);
+        points += 50 / (haystackWords.length * this.options.maxDistanceTolerance) * (haystackWords.length * this.options.maxDistanceTolerance - combinedScore);
         
         return points;
     },
@@ -179,6 +196,8 @@ var FuzzySearch = prime({
         return "";
     },
 });
+
+FuzzySearch.CONST = FuzzySearch.prototype.CONST = {'DISTANCE_METHOD_LEVENSHTEIN': 1, 'DISTANCE_METHOD_SIFT3': 2};
 
 mixin(FuzzySearch, Options, bound);
 
