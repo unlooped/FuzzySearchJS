@@ -10,10 +10,8 @@ var sift3 = prime({
         this.haystack = haystack;
     },
     
-    getDifference: function(term) {
-        var s1 = term,
-            s2 = this.haystack,
-            c = 0,
+    getDifference: function(s1, s2) {
+        var c = 0,
             offset1 = 0,
             offset2 = 0,
             lcs = 0,
