@@ -5,14 +5,14 @@ var prime = require('prime');
 var Options = prime({
     
     setOptions: function(options) {
+        var object = require('prime-util/types/object');
+        this.options = object.merge({}, this.options);
+        
         if (!options) {
             return;
         }
         
-        this.options = this.options || {};
-        
-        var Object = require('prime-util/types/object');
-        this.options = Object.merge(this.options, options);
+        this.options = object.merge(this.options, options);
     }
     
 });
