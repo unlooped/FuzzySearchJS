@@ -11,9 +11,8 @@ require('elements/lib/insertion');
 require('elements/lib/traversal');
 var empty = require('elements-util/lib/empty'); // I dunno why it's not implemented in elements. Take a deeper look later...
 
-
-
 var zen = require('elements/lib/zen')
+var number = require('prime/types/number');
 
 var mixin = require('prime-util/prime/mixin');
 var bound = require('prime-util/prime/bound');
@@ -54,7 +53,7 @@ var Main = prime({
         empty(container).empty(); // WA, implement empty in elements...
         
         list.each(results, function(result) {
-            zen('li').text(result.value + ' ('+result.score+')').insert(container);
+            zen('li').text(result.value + ' (total: '+number.round(result.score)+' ds: '+number.round(result.detailedScore.distanceScore / 3)+')').insert(container);
         });
     },
     
