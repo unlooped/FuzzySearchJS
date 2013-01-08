@@ -2872,7 +2872,6 @@ list
             },
             constructor: function(searchSet, options) {
                 this.setOptions(options);
-                console.log(this.options);
                 this.searchSet = searchSet;
             },
             search: function(needle) {
@@ -2964,10 +2963,8 @@ list
                         var haystackWord = haystackWords[j];
                         var score;
                         if (this.CONST["DISTANCE_METHOD_LEVENSHTEIN"] == this.options.distanceMethod) {
-                            console.log("lev");
                             score = lev(needleWord, haystackWord);
                         } else if (this.CONST["DISTANCE_METHOD_SIFT3"] == this.options.distanceMethod) {
-                            console.log("sift3");
                             score = this.sift3.getDifference(needleWord);
                         }
                         if (score <= this.options.maxDistanceTolerance) {
@@ -3028,10 +3025,13 @@ list
 
         var prime = require("1");
 
+        var object = require("12");
+
         var Options = prime({
             setOptions: function(options) {
-                var object = require("12");
-                this.options = object.merge({}, this.options);
+                var args = [ {}, this.options ];
+                args.push.apply(args, arguments);
+                this.options = object.merge.apply(null, args);
                 if (!options) {
                     return;
                 }

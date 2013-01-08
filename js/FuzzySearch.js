@@ -28,7 +28,6 @@ var FuzzySearch = prime({
     
     constructor: function(searchSet, options) {
         this.setOptions(options);
-        console.log(this.options);
         this.searchSet = searchSet;
     },
     
@@ -135,10 +134,8 @@ var FuzzySearch = prime({
                 
                 var score;
                 if (this.CONST['DISTANCE_METHOD_LEVENSHTEIN'] == this.options.distanceMethod) {
-                    console.log('lev');
                     score = lev(needleWord, haystackWord);
                 } else if (this.CONST['DISTANCE_METHOD_SIFT3'] == this.options.distanceMethod) {
-                    console.log('sift3');
                     score = this.sift3.getDifference(needleWord);
                 }
                 
