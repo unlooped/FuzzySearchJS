@@ -12,21 +12,25 @@
             }
             
             section {
-                width: 45%;
+                width: 32%;
                 float: left;
             }
         </style>
     </head>
     <body>
         <h1>FuzzySearchJS Example</h1>
+        <input type="text" value="i.E. tool suuplies" id="searchfield" /><p>Current maximum score: <span id="maxscore"></span></p>
         <section class="data">
             <h2>Data</h2>
             <ul id="data"></ul>
         </section>
         <section class="results">
-            <h2>Results</h2>
-            <input type="text" value="i.E. tool suuplies" id="searchfield" /><p>Current maximum score: <span id="maxscore"></span></p>
+            <h2>Levenshtein Results</h2>
             <ul id="results"></ul>
+        </section>
+        <section class="results">
+            <h2>Sift3 Results</h2>
+            <ul id="siftResults"></ul>
         </section>
         <script src="../js/data.js"></script>
         <script src="../js/FuzzySearchWrup.js"></script>

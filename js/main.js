@@ -29,9 +29,11 @@ var Main = prime({
     
     constructor: function() {
         this.searchField = $$('#searchfield');
-        this.fuzzySearch = new FuzzySearch(fsData);
+        console.log(FuzzySearch.prototype);
+        this.levFuzzySearch = new FuzzySearch(fsData);
+        this.sift3FuzzySearch = new FuzzySearch(fsData, {'distanceMethod': FuzzySearch.CONST['DISTANCE_METHOD_SIFT3']});
         
-        $$('#maxscore').text(this.fuzzySearch.getMaximumScore());
+        $$('#maxscore').text(this.levFuzzySearch.getMaximumScore());
         
         this.loadEvents();
         this.displayData();
@@ -48,8 +50,8 @@ var Main = prime({
         });
     },
     
-    displayResults: function(results) {
-        var container = $$('#results');
+    displayResults: function(results, container) {
+        var container = container;
         empty(container).empty(); // WA, implement empty in elements...
         
         list.each(results, function(result) {
@@ -59,8 +61,11 @@ var Main = prime({
     
     search: function() {
         var term = this.searchField.value();
-        var results = this.fuzzySearch.search(term);
-        this.displayResults(results);
+        var levResults = this.levFuzzySearch.search(term);
+        var sift3Results = this.sift3FuzzySearch.search(term);
+        
+        this.displayResults(levResults, $$('#results'));
+        this.displayResults(sift3Results, $$('#siftResults'));
     }
     
     
