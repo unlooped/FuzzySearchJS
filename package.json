@@ -1,6 +1,6 @@
 {
   "name": "FuzzySearchJS",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "FuzzySearching in JS",
   "main": "main.js",
   "scripts": {},
@@ -11,10 +11,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "prime": "*",
-    "prime-util": "*",
-    "elements": "*",
-    "elements-util": "*",
+    "prime": "0.1.0",
+    "prime-util": "0.1.0",
+    "elements": "0.1.0",
+    "elements-util": "0.1.0",
     "levenshtein": "*"
   }
 }
