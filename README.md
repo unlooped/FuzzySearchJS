@@ -65,7 +65,8 @@ Returns an array like this:
         {"name":"IndexOfFS","score":80,"factor":3},
         {"name":"WordCountFS","score":100,"factor":1}
      ],
-     "value":"Helium"},
+     "value":"Helium"
+     },
      {"score":490,
       "details":[
         {"name":"LevenshteinFS","score":50,"factor":3},
@@ -99,12 +100,15 @@ Now your result would look something like this:
         {"name":"IndexOfFS","score":80,"factor":3},
         {"name":"WordCountFS","score":100,"factor":1}
      ],
-     "value": {'id': 1, 'demo': {'element': 'Hydrogen'}}},
+     "value": {'id': 1, 'demo': {'element': 'Hydrogen'}}
+     },
      {"score":490,
       "details":[
         {"name":"LevenshteinFS","score":50,"factor":3},
         {"name":"IndexOfFS","score":80,"factor":3},
         {"name":"WordCountFS","score":100,"factor":1}
       ],
-      "value":{'id': 2, 'demo': {'element': 'Helium'}}}
+      "value":{'id': 2, 'demo': {'element': 'Helium'}}
+     },
+     ...
 ```
