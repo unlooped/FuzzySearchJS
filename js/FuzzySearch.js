@@ -33,7 +33,7 @@ var FuzzySearch = prime({
         var result = [];
 
         Arr.forEach(this.searchSet, function(value) {
-            var value = this.options.termPath.length == 0 ? value : Obj.getValueForPath(value, this.options.termPath);
+            var value = this.options.termPath.length == 0 ? value : Obj.fromPath(value, this.options.termPath);
 
             if (this.options.caseSensitive) {
                 value = value.toLowerCase();
