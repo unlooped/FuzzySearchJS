@@ -79,6 +79,7 @@
                 displayResults: function (results, container) {
                     var container = container;
                     $$(container).empty();
+                    console.log('results', JSON.stringify(results));
                     Arr.forEach(results, function (result) {
                         zen('li').text(result.value + ' (total: ' + number.round(result.score) + ')').insert(container);
                     });
@@ -1904,7 +1905,7 @@
                     var needle = this.options.caseSensitive ? string.clean(needle).toLowerCase() : string.clean(needle);
                     var result = [];
                     Arr.forEach(this.searchSet, function (value) {
-                        var value = this.options.termPath.length == 0 ? value : Obj.getValueForPath(value, this.options.termPath);
+                        var value = this.options.termPath.length == 0 ? value : Obj.fromPath(value, this.options.termPath);
                         if (this.options.caseSensitive) {
                             value = value.toLowerCase();
                         }
@@ -1984,12 +1985,17 @@
                     }
                 return this;
             },
-            getValueForPath: function (path) {
-                var pathSteps = path.split('.'), result = this;
-                for (var i = 0; i < pathSteps.length; i++) {
-                    result = result[pathSteps[i]] ? result[pathSteps[i]] : result[pathSteps[i]] = {};
+            fromPath: function (parts) {
+                var source = this;
+                if (typeof parts == 'string')
+                    parts = parts.split('.');
+                for (var i = 0, l = parts.length; i < l; i++) {
+                    if (object.hasOwnProperty(source, parts[i]))
+                        source = source[parts[i]];
+                    else
+                        return null;
                 }
-                return result;
+                return source;
             }
         });
         module.exports = object;
