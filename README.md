@@ -5,7 +5,7 @@ Prime Implementation for fuzzy searching
 
 ## About: ##
 
-FuzzySearchJS provides a easy and modular way for fuzzy searching in JS for multiple purposes.
+FuzzySearchJS provides an easy and modular way for fuzzy searching in JS for multiple purposes.
 
 ## Todo: ##
 
@@ -13,9 +13,9 @@ FuzzySearchJS provides a easy and modular way for fuzzy searching in JS for mult
 - Add makefile
 - Implement own Levenshtein algorithm for improving performance. It's not neccessary to calculate the whole number everytime. You can calculate the first rows and everytime a new letter is added you can just calculate the next row. Also if your tolerance is reached you can stop calculate the other rows.
 - Play around with factors for best results. Maybe some presets for different situations. It's a big difference if you make a live search or if you make a search with the full term.
-- Take a closer look at Sift3 algorithm. Maybe there is also some potential for performance optimizations.
+- Take a closer look at Sift3 algorithm. Maybe there also is some potential for performance optimizations.
 - Implement caching for results
-- Implement that the user choice can be transfered to server, so maybe this could also be a source.
+- Implement that the user choice can be transfered to server, so maybe this also could be a source.
 - Implement that caching for the same resultset can be preloaded from server.
 - Make better examples and better readme
 
@@ -77,7 +77,7 @@ Returns an array like this:
       ...
 ```
 
-Like ou see you get an overall score which indicates how close the match is.
+Like you see you get an overall score which indicates how close the match is.
 You also get an array with more details, you see in there the score of every module and the factor by which the score is multiplied.
 And for sure, in the "value" field you will find the value from the dataset.
 
