@@ -9,7 +9,7 @@ var FSModule = prime({
 
     lastTerm: '',
     lastHaystack: '',
-    lastResults: [],
+    lastResults: null,
 
     options: {
         'factor': 1
@@ -17,6 +17,7 @@ var FSModule = prime({
 
     constructor: function(options) {
         this.setOptions(options);
+        this.lastResults = [];
     },
 
     search: function(searchTerm) {
