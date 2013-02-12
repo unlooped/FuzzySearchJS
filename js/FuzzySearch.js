@@ -29,13 +29,13 @@ var FuzzySearch = prime({
     },
 
     search: function(needle) {
-        needle = this.options.caseSensitive ? string.clean(needle).toLowerCase() : string.clean(needle);
+        needle = !this.options.caseSensitive ? string.clean(needle).toLowerCase() : string.clean(needle);
         var result = [];
 
         Arr.forEach(this.searchSet, function(value) {
             value = this.options.termPath.length === 0 ? value : Obj.fromPath(value, this.options.termPath);
 
-            if (this.options.caseSensitive) {
+            if (!this.options.caseSensitive) {
                 value = value.toLowerCase();
             }
 
