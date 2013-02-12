@@ -21,11 +21,11 @@ var FSModule = prime({
     },
 
     search: function(searchTerm) {
-        throw "search method not implemented";
+        throw new Error("search method not implemented");
     },
 
     getPoints: function() {
-        throw "getPoints method not implemented";
+        throw new Error("getPoints method not implemented");
     },
 
     getMatches: function() {
@@ -37,7 +37,7 @@ var FSModule = prime({
     },
 
     getName: function() {
-        if (!this.name) throw "set module name!";
+        if (!this.name) throw new Error("set module name!");
 
         return this.name;
     }
