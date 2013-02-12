@@ -12,7 +12,7 @@ var Obj = require('prime-util/shell/object');
 
 var FuzzySearch = prime({
 
-    modules: [],
+    modules: null,
 
     options: {
         'caseSensitive': false,
@@ -22,6 +22,7 @@ var FuzzySearch = prime({
     constructor: function(searchSet, options) {
         this.setOptions(options);
         this.searchSet = searchSet;
+        this.modules = [];
     },
 
     addModule: function(mod) {
