@@ -9,8 +9,7 @@ FuzzySearchJS provides an easy and modular way for fuzzy searching in JS for mul
 
 ## Todo: ##
 
-- Add tests
-- Add makefile
+- Add tests for Modules
 - Implement own Levenshtein algorithm for improving performance. It's not neccessary to calculate the whole number everytime. You can calculate the first rows and everytime a new letter is added you can just calculate the next row. Also if your tolerance is reached you can stop calculate the other rows.
 - Play around with factors for best results. Maybe some presets for different situations. It's a big difference if you make a live search or if you make a search with the full term.
 - Take a closer look at Sift3 algorithm. Maybe there also is some potential for performance optimizations.
@@ -111,4 +110,13 @@ Now your result would look something like this:
       "value":{'id': 2, 'demo': {'element': 'Helium'}}
      },
      ...
+```
+
+## Testing ##
+
+Mac OS X Terminal or Linux Terminal.
+
+```
+cd FuzzySearchJS
+make test
 ```
