@@ -65,4 +65,4 @@ var Sift3FS = prime({
 
 });
 
-module.exports = Sift3FS;
+module.exports = function(options) {return new Sift3FS(options);};

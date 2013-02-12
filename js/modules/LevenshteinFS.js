@@ -61,4 +61,4 @@ var LevenshteinFS = prime({
 
 });
 
-module.exports = LevenshteinFS;
+module.exports = function(options) {return new LevenshteinFS(options);};

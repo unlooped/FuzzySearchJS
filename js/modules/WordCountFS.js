@@ -29,4 +29,4 @@ var WordCountFS = prime({
 
 });
 
-module.exports = WordCountFS;
+module.exports = function(options) {return new WordCountFS(options);};
