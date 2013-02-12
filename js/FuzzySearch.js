@@ -25,7 +25,7 @@ var FuzzySearch = prime({
     },
 
     addModule: function(mod) {
-        this.modules.push(new mod.module(mod.options));
+        this.modules.push(mod);
     },
 
     search: function(needle) {
