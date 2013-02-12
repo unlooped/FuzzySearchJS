@@ -16,7 +16,9 @@ var FuzzySearch = prime({
 
     options: {
         'caseSensitive': false,
-        'termPath': ''
+        'termPath': '',
+        'returnEmptyArray': false,
+        'minimumScore': 0
     },
 
     constructor: function(searchSet, options) {
@@ -42,8 +44,13 @@ var FuzzySearch = prime({
             }
 
             var score = this.getCombinedModulePoints(needle, searchValue);
-            result.push({'score': score.combined, 'details': score.details, 'value': origValue});
+
+            if (score.combined >= this.options.minimumScore) result.push({'score': score.combined, 'details': score.details, 'value': origValue});
         }, this);
+
+        if (!this.options.returnEmptyArray && result.length === 0) {
+            return null;
+        }
 
         return result.sort(function(a, b) {
             return b.score - a.score;
