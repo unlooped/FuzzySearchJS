@@ -34,14 +34,15 @@ var FuzzySearch = prime({
         var result = [];
 
         Arr.forEach(this.searchSet, function(value) {
-            value = this.options.termPath.length === 0 ? value : Obj.fromPath(value, this.options.termPath);
+            var origValue = value;
+            var searchValue = this.options.termPath.length === 0 ? value : Obj.fromPath(value, this.options.termPath);
 
             if (!this.options.caseSensitive) {
-                value = value.toLowerCase();
+                searchValue = searchValue.toLowerCase();
             }
 
-            var score = this.getCombinedModulePoints(needle, value);
-            result.push({'score': score.combined, 'details': score.details, 'value': value});
+            var score = this.getCombinedModulePoints(needle, searchValue);
+            result.push({'score': score.combined, 'details': score.details, 'value': origValue});
         }, this);
 
         return result.sort(function(a, b) {
