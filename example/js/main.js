@@ -17,11 +17,11 @@ var number = require('prime/shell/number');
 var mixin = require('prime-util/prime/mixin');
 var bound = require('prime-util/prime/bound');
 
-var FuzzySearch = require('./FuzzySearch');
-var LevenshteinFS = require('./modules/LevenshteinFS');
-var Sift3FS = require('./modules/Sift3FS');
-var IndexOfFS = require('./modules/IndexOfFS');
-var WordCountFS = require('./modules/WordCountFS');
+var FuzzySearch = require('../../js/FuzzySearch');
+var LevenshteinFS = require('../../js/modules/LevenshteinFS');
+var Sift3FS = require('../../js/modules/Sift3FS');
+var IndexOfFS = require('../../js/modules/IndexOfFS');
+var WordCountFS = require('../../js/modules/WordCountFS');
 
 var Arr = require('prime/es5/array');
 
@@ -35,9 +35,9 @@ var Main = prime({
         this.searchField = $$('#searchfield');
 
         this.fuzzySearch = new FuzzySearch(fsData, {'caseSensitive': false, 'termPath': ''});
-        this.fuzzySearch.addModule({'module': LevenshteinFS, 'options': {'maxDistanceTolerance': 3, 'factor': 3}});
-        this.fuzzySearch.addModule({'module': IndexOfFS, 'options': {'minTermLength': 3, 'maxIterations': 500, 'factor': 3}});
-        this.fuzzySearch.addModule({'module': WordCountFS, 'options': {'maxWordTolerance': 3, 'factor': 1}});
+        this.fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 3, 'factor': 3}));
+        this.fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 3}));
+        this.fuzzySearch.addModule(WordCountFS({'maxWordTolerance': 3, 'factor': 1}));
 
         $$('#maxscore').text(this.fuzzySearch.getMaximumScore());
 
