@@ -52,4 +52,25 @@ describe('FuzzySearch', function() {
         expect(result).to.be.eql([{"score":262.5,"details":[{"name":"IndexOfFS","score":87.5,"factor":3}],"value":{"id":1,"element":{"name":"Hydrogen"}}},{"score":0,"details":[{"name":"IndexOfFS","score":0,"factor":3}],"value":{"id":2,"element":{"name":"Helium"}}},{"score":0,"details":[{"name":"IndexOfFS","score":0,"factor":3}],"value":{"id":3,"element":{"name":"Lithium"}}},{"score":0,"details":[{"name":"IndexOfFS","score":0,"factor":3}],"value":{"id":4,"element":{"name":"Beryllium"}}},{"score":0,"details":[{"name":"IndexOfFS","score":0,"factor":3}],"value":{"id":5,"element":{"name":"Boron"}}},{"score":0,"details":[{"name":"IndexOfFS","score":0,"factor":3}],"value":{"id":6,"element":{"name":"Carbon"}}}]);
     });
 
+    it ("Only return results with a minimum score", function() {
+        var fuzzySearch = new FuzzySearch(dataObjects, {'caseSensitive': true, 'termPath': 'element.name', 'minimumScore': 25});
+        fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 1}));
+        var result = fuzzySearch.search('hydrogen');
+        expect(result).to.be.eql([{"score":87.5,"details":[{"name":"IndexOfFS","score":87.5,"factor":1}],"value":{"id":1,"element":{"name":"Hydrogen"}}}]);
+    });
+
+    it ("Return empty array if option 'returnEmptyArray' is set to true", function() {
+        var fuzzySearch = new FuzzySearch(dataObjects, {'caseSensitive': true, 'termPath': 'element.name', 'minimumScore': 125, 'returnEmptyArray': true});
+        fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 1}));
+        var result = fuzzySearch.search('hydrogen');
+        expect(result).to.be.eql([]);
+    });
+
+    it ("Return null if option 'returnEmptyArray' is set to false (default)", function() {
+        var fuzzySearch = new FuzzySearch(dataObjects, {'caseSensitive': true, 'termPath': 'element.name', 'minimumScore': 125});
+        fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 1}));
+        var result = fuzzySearch.search('hydrogen');
+        expect(result).to.be.eql(null);
+    });
+
 });
