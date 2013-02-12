@@ -44,9 +44,9 @@ var LevenshteinFS = require('./modules/LevenshteinFS');
 var IndexOfFS = require('./modules/IndexOfFS');
 var WordCountFS = require('./modules/WordCountFS');
 
-fuzzySearch.addModule({'module': LevenshteinFS, 'options': {'maxDistanceTolerance': 3, 'factor': 3}});
-fuzzySearch.addModule({'module': IndexOfFS, 'options': {'minTermLength': 3, 'maxIterations': 500, 'factor': 3}});
-fuzzySearch.addModule({'module': WordCountFS, 'options': {'maxWordTolerance': 3, 'factor': 1}});
+fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 3, 'factor': 3}));
+fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 3}));
+fuzzySearch.addModule(WordCountFS({'maxWordTolerance': 3, 'factor': 1}));
 ```
 
 Now you are ready to go:
