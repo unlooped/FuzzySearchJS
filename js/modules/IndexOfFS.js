@@ -68,4 +68,4 @@ var IndexOfFS = prime({
 
 });
 
-module.exports = function(options) {return new IndexOfFS(options)};
+module.exports = function(options) {return new IndexOfFS(options);};
