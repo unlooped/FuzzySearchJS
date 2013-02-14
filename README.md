@@ -1,7 +1,8 @@
 FuzzySearchJS
 =============
 
-Prime Implementation for fuzzy searching
+Prime Implementation for fuzzy searching.
+
 FuzzySearchJS provides an easy and modular way for fuzzy searching in JS for multiple purposes.
 
 Special thanks to Arian Stolwijk and Dimitar Christoff for some early reviews and some ideas.
