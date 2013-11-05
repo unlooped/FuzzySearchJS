@@ -2,7 +2,9 @@
 
 var prime = require('prime');
 var FSModule = require('./FSModule');
-var Arr = require('prime/es5/array');
+var arr = {
+	'forEach': require('prime/array/forEach')
+};
 var lev = require('levenshtein');
 
 var LevenshteinFS = prime({
@@ -47,7 +49,7 @@ var LevenshteinFS = prime({
         var haystackWords = this.lastHaystack.split(' ');
 
         var combinedScore = 0;
-        Arr.forEach(this.lastResults, function(result) {
+        arr.forEach(this.lastResults, function(result) {
             combinedScore += result.score;
         });
 

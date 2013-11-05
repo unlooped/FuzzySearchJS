@@ -2,7 +2,9 @@
 
 var prime = require('prime');
 var FSModule = require('./FSModule');
-var Arr = require('prime/es5/array');
+var arr = {
+	'forEach': require('prime/array/forEach')
+};
 var sift3 = require('./Sift3');
 
 var Sift3FS = prime({
@@ -51,7 +53,7 @@ var Sift3FS = prime({
         var haystackWords = this.lastHaystack.split(' ');
 
         var combinedScore = 0;
-        Arr.forEach(this.lastResults, function(result) {
+        arr.forEach(this.lastResults, function(result) {
             combinedScore += result.score;
         });
 

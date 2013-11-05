@@ -2,7 +2,9 @@
 
 var prime = require('prime');
 var FSModule = require('./FSModule');
-var number = require('prime/shell/number');
+var number = {
+	'limit': require('prime/number/limit')
+};
 
 var WordCountFS = prime({
 
