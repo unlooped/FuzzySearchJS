@@ -5,6 +5,7 @@
   "main": "js/FuzzySearch.js",
   "scripts": {},
   "author": "Steffen Persch (n3on)",
+  "keywords": "fuzzysearch, search, fuzzy, approximate string matching, fuzzy searching, suggestions",
   "repository": {
     "type": "git",
     "url": "git@github.com:unlooped/FuzzySearchJS.git"
