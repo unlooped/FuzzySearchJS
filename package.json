@@ -1,6 +1,6 @@
 {
   "name": "fuzzysearch-js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "FuzzySearching in JS",
   "main": "js/FuzzySearch.js",
   "scripts": {},
