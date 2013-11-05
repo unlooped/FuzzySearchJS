@@ -2,7 +2,9 @@
 
 var prime = require('prime');
 var FSModule = require('./FSModule');
-var Arr = require('prime/es5/array');
+var arr = {
+	'forEach': require('prime/array/forEach')
+};
 
 var IndexOfFS = prime({
 
@@ -59,7 +61,7 @@ var IndexOfFS = prime({
 
     getPoints: function() {
         var sum = 0;
-        Arr.forEach(this.lastResults, function(result) {
+        arr.forEach(this.lastResults, function(result) {
             sum += result.length;
         });
 

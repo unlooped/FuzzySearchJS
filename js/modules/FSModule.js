@@ -1,10 +1,10 @@
 "Use Strict";
 
 var prime = require('prime');
-var mixin = require('prime-util/prime/mixin');
-var bound = require('prime-util/prime/bound');
-var options = require('prime-util/prime/options');
-
+var obj = {
+	'mixin': require('prime/object/mixIn'),
+	'create': require('prime/object/create')
+};
 var FSModule = prime({
 
     lastTerm: '',
@@ -16,7 +16,7 @@ var FSModule = prime({
     },
 
     constructor: function(options) {
-        this.setOptions(options);
+        this.options = obj.mixin(obj.create(this.options), options);
         this.lastResults = [];
     },
 
@@ -43,7 +43,5 @@ var FSModule = prime({
     }
 
 });
-
-mixin(FSModule, bound, options);
 
 module.exports = FSModule;

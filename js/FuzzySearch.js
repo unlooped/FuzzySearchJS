@@ -1,13 +1,17 @@
 "Use Strict";
 
 var prime = require('prime');
-var string = require('prime/shell/string');
-var mixin = require('prime-util/prime/mixin');
-var bound = require('prime-util/prime/bound');
-var options = require('prime-util/prime/options');
+var trim = require('prime/string/trim');
 
-var Arr = require('prime/es5/array');
-var Obj = require('prime-util/shell/object');
+var arr = {
+	'forEach': require('prime/array/forEach')
+};
+
+var obj = {
+	'mixin': require('prime/object/mixIn'),
+	'fromPath': require('./fromPath'),
+	'create': require('prime/object/create')
+};
 
 
 var FuzzySearch = prime({
@@ -22,7 +26,7 @@ var FuzzySearch = prime({
     },
 
     constructor: function(searchSet, options) {
-        this.setOptions(options);
+        this.options = obj.mixin(obj.create(this.options), options);
         this.searchSet = searchSet;
         this.modules = [];
     },
@@ -32,12 +36,12 @@ var FuzzySearch = prime({
     },
 
     search: function(needle) {
-        needle = !this.options.caseSensitive ? string.clean(needle).toLowerCase() : string.clean(needle);
+        needle = !this.options.caseSensitive ? trim(needle).toLowerCase() : trim(needle);
         var result = [];
 
-        Arr.forEach(this.searchSet, function(value) {
+        arr.forEach(this.searchSet, function(value) {
             var origValue = value;
-            var searchValue = this.options.termPath.length === 0 ? value : Obj.fromPath(value, this.options.termPath);
+            var searchValue = this.options.termPath.length === 0 ? value : obj.fromPath(value, this.options.termPath);
 
             if (!this.options.caseSensitive) {
                 searchValue = searchValue.toLowerCase();
@@ -59,7 +63,7 @@ var FuzzySearch = prime({
 
     getCombinedModulePoints: function(needle, haystack) {
         var result = {'combined': 0, 'details': []};
-        Arr.forEach(this.modules, function(mod) {
+        arr.forEach(this.modules, function(mod) {
             var score = mod.search(needle, haystack).getPoints();
             var name = mod.getName();
             var factor = mod.getFactor();
@@ -73,7 +77,7 @@ var FuzzySearch = prime({
 
     getMaximumScore: function() {
         var factorSum = 0;
-        Arr.forEach(this.modules, function(mod) {
+        arr.forEach(this.modules, function(mod) {
             factorSum += mod.getFactor();
         });
 
@@ -81,8 +85,5 @@ var FuzzySearch = prime({
     }
 
 });
-
-
-mixin(FuzzySearch, options, bound);
 
 module.exports = FuzzySearch;
