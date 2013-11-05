@@ -7,6 +7,31 @@ FuzzySearchJS provides an easy and modular way for fuzzy searching in JS for mul
 
 Special thanks to Arian Stolwijk and Dimitar Christoff for some early reviews and some ideas.
 
+## Quick Start: ##
+
+Install:
+```js
+npm install fuzzysearch-js
+```
+
+Usage:
+```js
+var FuzzySearch = require('fuzzysearch-js');
+var levenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
+var indexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
+var wordCountFS = require('fuzzysearch-js/js/modules/WordCountFS');
+
+var data = ['Hydrogen','Helium','Lithium','Beryllium'];
+
+var fuzzySearch = new FuzzySearch(data, {'minimumScore': 300});
+fuzzySearch.addModule(levenshteinFS({'maxDistanceTolerance': 3, 'factor': 3}));
+fuzzySearch.addModule(indexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 3}));
+fuzzySearch.addModule(wordCountFS({'maxWordTolerance': 3, 'factor': 1}));
+
+var result = fuzzySearch.search('Hlium');
+console.log(result);
+```
+
 ## Todo: ##
 
 - Add tests for Modules
