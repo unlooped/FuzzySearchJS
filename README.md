@@ -202,6 +202,16 @@ options:
 'factor': 1
 ```
 
+## LevenshteinSimpleFS ##
+```js
+var LevenshteinSimpleFS = require('./modules/LevenshteinSimpleFS ');
+```
+options:
+```js
+'harshness': 1, //The rate at which the score decreases in comparison to the distance,
+'caseSensitive': false //Whether or not to calculate the distance case sensitively
+'factor': 1
+```
 ## Sift3FS ###
 
 ```js
@@ -241,4 +251,3 @@ options:
 'maxWordTolerance': 3,
 'factor': 1
 ```
-
