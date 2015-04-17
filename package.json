@@ -6,25 +6,26 @@
   "scripts": {},
   "author": "Steffen Persch (n3on)",
   "contributors": [
-	{
-	  "name": "Christopher Taylor",
-	  "email": "christhebaron@gmail.com"
-	}
+    {
+      "name": "Christopher Taylor",
+      "email": "christhebaron@gmail.com"
+    }
   ],
   "keywords": "fuzzysearch, search, fuzzy, approximate string matching, fuzzy searching, suggestions",
   "repository": {
-	"type": "git",
-	"url": "git@github.com:unlooped/FuzzySearchJS.git"
+    "type": "git",
+    "url": "git@github.com:unlooped/FuzzySearchJS.git"
   },
   "license": "MIT",
   "dependencies": {
-	"prime": "0.3.x",
-	"levenshtein": "*"
+    "debug": "^2.1.3",
+    "levenshtein": "*",
+    "prime": "0.3.x"
   },
   "devDependencies": {
-	"mocha": "1.3",
-	"expect.js": "0.1",
-	"jshint": "0.9",
-	"elements": "0.2.x"
+    "mocha": "1.3",
+    "expect.js": "0.1",
+    "jshint": "0.9",
+    "elements": "0.2.x"
   }
 }
