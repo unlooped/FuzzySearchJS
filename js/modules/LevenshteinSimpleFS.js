@@ -33,6 +33,9 @@ var LevenshteinSimpleFS = prime({
 
 		debugLevenshteinSimpleFSsearch('()', term, haystack);
 
+		this.lastTerm = term;
+		this.lastHaystack = haystack;
+
 		if (!this.options.caseSensitive) {
 			term = term.toUpperCase();
 			haystack = haystack.toUpperCase();
@@ -59,7 +62,11 @@ var LevenshteinSimpleFS = prime({
 
 		debugLevenshteinSimpleFSgetPoints('this.lastScore', this.lastScore);
 
-		return (100 / (1 + (this.options.harshness) * this.lastScore));
+		var averageLength = (this.lastTerm.length + this.lastHaystack.length) / 2;
+
+		debugLevenshteinSimpleFSgetPoints('averageLength', averageLength);
+
+		return 100 * Math.pow(Math.E, -(this.options.harshness) * this.lastScore / averageLength);
 
 	}
 

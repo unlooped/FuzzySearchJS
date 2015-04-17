@@ -87,7 +87,7 @@ describe('LevenshteinSimpleFS', function () {
 						harshness: val
 					});
 
-					module.lastScore = 0;
+					module.search('hi there', 'HI THERE');
 
 					var result = module.getPoints();
 
@@ -97,17 +97,129 @@ describe('LevenshteinSimpleFS', function () {
 
 		});
 
-		it('should return a score of less than 100 if the strings aren\'t equal', function () {
+		it('should return a pretty high score if the strings are only 1 character out', function () {
 
 			var module = new LevenshteinSimpleFS({
 				harshness: 1
 			});
 
-			module.lastScore = 10;
+			module.search('hi there', 'h there');
 
 			var result = module.getPoints();
 
-			expect(result).to.be.eql(9.090909090909092);
+			expect(result).to.be.eql(87.51733190429475);
+
+		});
+
+		it('should return a pretty high score if the strings are only 1 character out even if the strings are short', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('hi the', 'h the');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(83.37529180751805);
+
+		});
+
+		it('should return a pretty high score if the strings are only 1 character out even if the strings are long', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('hi there the fox and the cat', 'h there the fox and the cat');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(96.42895789647244);
+
+		});
+
+		it('should return a pretty mild score if the strings are only half matching', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('hi there', 'ho tueoe');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(68.72892787909723);
+
+		});
+
+		it('should return a pretty mild score if the strings are only half out out even if the strings are short', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('hi', 'ho');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(60.653065971263345);
+
+		});
+
+		it('should return a pretty mild score if the strings are only half out out even if the strings are long', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('hi there the fox and the cat', 'ho tsete vht bon rnn hha oap');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(62.858393339862516);
+
+		});
+
+		it('pretty low score if the string aren\'t at all matching', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('qwerty', 'asdfgh');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(36.787944117144235);
+
+		});
+
+		it('pretty low score if the string aren\'t at all matching even if the strings are long', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('qwertyuiopqwertyuiop', 'asdfghjkasdfghjkzx');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(34.901807093132);
+
+		});
+
+		it('pretty low score if the string aren\'t at all matching even if the strings are short', function () {
+
+			var module = new LevenshteinSimpleFS({
+				harshness: 1
+			});
+
+			module.search('qw', 'as');
+
+			var result = module.getPoints();
+
+			expect(result).to.be.eql(36.787944117144235);
 
 		});
 
