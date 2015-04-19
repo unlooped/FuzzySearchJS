@@ -6,10 +6,6 @@
 var prime = require('prime');
 var FSModule = require('./FSModule');
 var lev = require('levenshtein');
-var debug = require('debug');
-
-var debugLevenshteinSimpleFSsearch = debug('fuzzysearch-js:LevenshteinSimpleFS:search');
-var debugLevenshteinSimpleFSgetPoints = debug('fuzzysearch-js:LevenshteinSimpleFS:getPoints');
 
 var LevenshteinSimpleFS = prime({
 
@@ -31,8 +27,6 @@ var LevenshteinSimpleFS = prime({
 	 */
 	search: function (term, haystack) {
 
-		debugLevenshteinSimpleFSsearch('()', term, haystack);
-
 		this.lastTerm = term;
 		this.lastHaystack = haystack;
 
@@ -42,8 +36,6 @@ var LevenshteinSimpleFS = prime({
 		}
 
 		var score = lev(term, haystack);
-
-		debugLevenshteinSimpleFSsearch('score', score);
 
 		this.lastScore = score;
 
@@ -58,13 +50,7 @@ var LevenshteinSimpleFS = prime({
 	 */
 	getPoints: function () {
 
-		debugLevenshteinSimpleFSgetPoints('()');
-
-		debugLevenshteinSimpleFSgetPoints('this.lastScore', this.lastScore);
-
 		var averageLength = (this.lastTerm.length + this.lastHaystack.length) / 2;
-
-		debugLevenshteinSimpleFSgetPoints('averageLength', averageLength);
 
 		return 100 * Math.pow(Math.E, -(this.options.harshness) * this.lastScore / averageLength);
 
