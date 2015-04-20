@@ -5,6 +5,12 @@
   "main": "js/FuzzySearch.js",
   "scripts": {},
   "author": "Steffen Persch (n3on)",
+  "contributors": [
+    {
+      "name": "Christopher Taylor",
+      "email": "christhebaron@gmail.com"
+    }
+  ],
   "keywords": "fuzzysearch, search, fuzzy, approximate string matching, fuzzy searching, suggestions",
   "repository": {
     "type": "git",
@@ -12,8 +18,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "prime": "0.3.x",
-    "levenshtein": "*"
+    "levenshtein": "*",
+    "prime": "0.3.x"
   },
   "devDependencies": {
     "mocha": "1.3",
