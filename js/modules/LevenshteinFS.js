@@ -27,17 +27,19 @@ var LevenshteinFS = prime({
 
         var nwl = needleWords.length;
         var hwl = haystackWords.length;
-        for (var i = 0; i < nwl; i++) {
-            for (var j = 0; j < hwl; j++) {
-                var needleWord = needleWords[i];
-                var haystackWord = haystackWords[j];
+        for (var i = 0; i < hwl; i++) {
+            var haystackWord = haystackWords[i];
+            var best = this.options.maxDistanceTolerance + 1;
+            for (var j = 0; j < nwl; j++) {
+                var needleWord = needleWords[j];
 
                 var score = lev(needleWord, haystackWord);
 
-                if (score <= this.options.maxDistanceTolerance) {
-                    matches.push({'match': needleWord, 'score': score});
+                if (score < best) {
+                    best = score;
                 }
             }
+            matches.push(best);
         }
 
         this.lastResults = matches;
@@ -48,12 +50,9 @@ var LevenshteinFS = prime({
     getPoints: function() {
         var haystackWords = this.lastHaystack.split(' ');
 
-        var combinedScore = 0;
-        arr.forEach(this.lastResults, function(result) {
-            combinedScore += result.score;
+        var combinedScore = this.lastResults.reduce(function(p, c) {
+            return p + c;
         });
-
-        combinedScore += (haystackWords.length - this.lastResults.length) * this.options.maxDistanceTolerance;
 
         var points = 50 / haystackWords.length * this.lastResults.length;
         points += 50 / (haystackWords.length * this.options.maxDistanceTolerance) * (haystackWords.length * this.options.maxDistanceTolerance - combinedScore);
@@ -64,3 +63,4 @@ var LevenshteinFS = prime({
 });
 
 module.exports = function(options) {return new LevenshteinFS(options);};
+
