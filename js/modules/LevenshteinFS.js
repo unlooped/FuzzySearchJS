@@ -1,9 +1,9 @@
-"Use Strict";
+"use strict";
 
 var prime = require('prime');
 var FSModule = require('./FSModule');
 var arr = {
-	'forEach': require('prime/array/forEach')
+    'forEach': require('prime/array/forEach')
 };
 var lev = require('levenshtein');
 
@@ -16,7 +16,7 @@ var LevenshteinFS = prime({
         'maxDistanceTolerance': 3
     },
 
-    search: function(term, haystack) {
+    search: function (term, haystack) {
         var that = this;
 
         this.lastTerm = term;
@@ -44,10 +44,10 @@ var LevenshteinFS = prime({
         return this;
     },
 
-    getPoints: function() {
+    getPoints: function () {
         var haystackWords = this.lastHaystack.split(' ');
 
-        var combinedScore = this.lastResults.reduce(function(p, c) {
+        var combinedScore = this.lastResults.reduce(function (p, c) {
             return p + c;
         });
 
@@ -59,5 +59,5 @@ var LevenshteinFS = prime({
 
 });
 
-module.exports = function(options) {return new LevenshteinFS(options);};
+module.exports = function (options) {return new LevenshteinFS(options); };
 
