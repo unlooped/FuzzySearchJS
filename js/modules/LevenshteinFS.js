@@ -17,6 +17,8 @@ var LevenshteinFS = prime({
     },
 
     search: function(term, haystack) {
+        var that = this;
+
         this.lastTerm = term;
         this.lastHaystack = haystack;
 
@@ -25,22 +27,17 @@ var LevenshteinFS = prime({
 
         var matches = [];
 
-        var nwl = needleWords.length;
-        var hwl = haystackWords.length;
-        for (var i = 0; i < hwl; i++) {
-            var haystackWord = haystackWords[i];
-            var best = this.options.maxDistanceTolerance + 1;
-            for (var j = 0; j < nwl; j++) {
-                var needleWord = needleWords[j];
-
+        arr.forEach(haystackWords, function (haystackWord) {
+            var best = that.options.maxDistanceTolerance + 1;
+            arr.forEach(needleWords, function (needleWord) {
                 var score = lev(needleWord, haystackWord);
 
                 if (score < best) {
                     best = score;
                 }
-            }
+            });
             matches.push(best);
-        }
+        });
 
         this.lastResults = matches;
 
