@@ -1,6 +1,6 @@
 {
   "name": "fuzzysearch-js",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "FuzzySearching in JS",
   "main": "js/FuzzySearch.js",
   "scripts": {},
@@ -9,6 +9,9 @@
     {
       "name": "Christopher Taylor",
       "email": "christhebaron@gmail.com"
+    },{
+      "name": "Dominic Shelton",
+      "email": "drdshelton@gmail.com"
     }
   ],
   "keywords": "fuzzysearch, search, fuzzy, approximate string matching, fuzzy searching, suggestions",
