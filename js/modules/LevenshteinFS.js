@@ -1,9 +1,9 @@
-"Use Strict";
+"use strict";
 
 var prime = require('prime');
 var FSModule = require('./FSModule');
 var arr = {
-	'forEach': require('prime/array/forEach')
+    'forEach': require('prime/array/forEach')
 };
 var lev = require('levenshtein');
 
@@ -16,7 +16,9 @@ var LevenshteinFS = prime({
         'maxDistanceTolerance': 3
     },
 
-    search: function(term, haystack) {
+    search: function (term, haystack) {
+        var that = this;
+
         this.lastTerm = term;
         this.lastHaystack = haystack;
 
@@ -25,35 +27,29 @@ var LevenshteinFS = prime({
 
         var matches = [];
 
-        var nwl = needleWords.length;
-        var hwl = haystackWords.length;
-        for (var i = 0; i < nwl; i++) {
-            for (var j = 0; j < hwl; j++) {
-                var needleWord = needleWords[i];
-                var haystackWord = haystackWords[j];
-
+        arr.forEach(haystackWords, function (haystackWord) {
+            var best = that.options.maxDistanceTolerance + 1;
+            arr.forEach(needleWords, function (needleWord) {
                 var score = lev(needleWord, haystackWord);
 
-                if (score <= this.options.maxDistanceTolerance) {
-                    matches.push({'match': needleWord, 'score': score});
+                if (score < best) {
+                    best = score;
                 }
-            }
-        }
+            });
+            matches.push(best);
+        });
 
         this.lastResults = matches;
 
         return this;
     },
 
-    getPoints: function() {
+    getPoints: function () {
         var haystackWords = this.lastHaystack.split(' ');
 
-        var combinedScore = 0;
-        arr.forEach(this.lastResults, function(result) {
-            combinedScore += result.score;
+        var combinedScore = this.lastResults.reduce(function (p, c) {
+            return p + c;
         });
-
-        combinedScore += (haystackWords.length - this.lastResults.length) * this.options.maxDistanceTolerance;
 
         var points = 50 / haystackWords.length * this.lastResults.length;
         points += 50 / (haystackWords.length * this.options.maxDistanceTolerance) * (haystackWords.length * this.options.maxDistanceTolerance - combinedScore);
@@ -63,4 +59,5 @@ var LevenshteinFS = prime({
 
 });
 
-module.exports = function(options) {return new LevenshteinFS(options);};
+module.exports = function (options) {return new LevenshteinFS(options); };
+
